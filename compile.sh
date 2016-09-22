@@ -9,7 +9,7 @@ export INSTALL="/usr/bin/install -C"
 
 usage () {
     printf 'Usage: %s [OPTION]...\n' "$0"
-    printf 'Checkout, compile and install Valhalla.\n\n'
+    printf 'Clone, compile and install Valhalla.\n\n'
     printf '  -h  print this message and exit\n'
     printf '  -a  skip autogen\n'
     printf '  -c  skip configure\n'
