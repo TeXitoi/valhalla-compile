@@ -71,7 +71,7 @@ clone_compile_install () {
             exit 1
         fi
         run git checkout master
-        run git pull --ff-only
+        run git pull --ff-only --recurse-submodules
     fi
     if [ "$skip_autogen" != YES ]; then
         run ./autogen.sh
