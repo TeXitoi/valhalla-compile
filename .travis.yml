@@ -22,4 +22,6 @@ addons:
 install:
   - export CC=gcc-4.9 CXX=g++-4.9
 script:
+  - ./compile.sh -h
   - ./compile.sh
+  - ./compile.sh -acm
