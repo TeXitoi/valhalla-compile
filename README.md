@@ -8,7 +8,7 @@ A script to compile [Valhalla](https://github.com/valhalla)
 ```
 $ ./compile.sh -h
 Usage: ./compile.sh [OPTION]...
-Checkout, compile and install Valhalla.
+Clone, compile and install Valhalla.
 
   -h  print this message and exit
   -a  skip autogen
