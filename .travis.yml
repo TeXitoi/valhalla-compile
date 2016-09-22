@@ -1,0 +1,25 @@
+language: cpp
+sudo: required
+dist: trusty
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.9
+      - g++-4.9
+      - libboost-all-dev
+      - protobuf-compiler
+      - libprotobuf-dev
+      - lua5.2
+      - liblua5.2-dev
+      - libsqlite3-dev
+      - libspatialite-dev
+      - libgeos-dev
+      - libgeos++-dev
+      - libcurl4-openssl-dev
+      - libzmq3-dev
+install:
+  - export CC=gcc-4.9 CXX=g++-4.9
+script:
+  - ./compile.sh
