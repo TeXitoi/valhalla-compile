@@ -95,6 +95,6 @@ clone_compile_install () {
 
 clone_compile_install https://github.com/kevinkreiser/ prime_server
 
-for project in midgard baldr sif meili skadi mjolnir loki odin thor tyr tools; do
+for project in midgard baldr sif skadi mjolnir meili loki odin thor tyr tools; do
     clone_compile_install https://github.com/valhalla/ "$project"
 done
