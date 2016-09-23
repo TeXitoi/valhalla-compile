@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ -r ./conf.sh ] && . ./conf.sh
+
 work_dir="$PWD"
 local="$work_dir/local"
 export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$local/lib/pkgconfig"
