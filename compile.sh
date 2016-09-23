@@ -1,6 +1,7 @@
 #!/bin/sh
 
 work_dir="$PWD"
+repos_dir="$work_dir/../repos"
 local="$work_dir/local"
 export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$local/lib/pkgconfig"
 export CPPFLAGS="$CPPFLAGS -DBOOST_SPIRIT_THREADSAFE -DBOOST_NO_CXX11_SCOPED_ENUMS"
@@ -51,6 +52,7 @@ done
 
 cd "$work_dir"
 mkdir -p "$local"
+mkdir -p "$repos_dir"
 
 run () {
     printf '> %s # PWD=%s\n' "$*" "$PWD"
@@ -67,6 +69,7 @@ is_dirty () {
 clone_compile_install () {
     git_base_url="$1"
     project="$2"
+    cd "$repos_dir"
     if [ ! -d "$project" ]; then
         run git clone --recursive "$git_base_url${project}.git"
     fi
@@ -82,8 +85,11 @@ clone_compile_install () {
     if [ "$skip_autogen" != YES ]; then
         run ./autogen.sh
     fi
+    cd "$work_dir"
+    mkdir -p "$project"
+    cd "$project"
     if [ "$skip_configure" != YES ]; then
-        run ./configure --prefix="$local" $CONFIGUREFLAGS
+        run "$repos_dir/$project/configure" --prefix="$local" $CONFIGUREFLAGS
     fi
     run make -j`nproc`
     if [ "$skip_test" != YES ]; then
