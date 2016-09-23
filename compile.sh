@@ -2,9 +2,9 @@
 
 work_dir="$PWD"
 local="$work_dir/local"
-export PKG_CONFIG_PATH=":$local/lib/pkgconfig"
-export CPPFLAGS="-DBOOST_SPIRIT_THREADSAFE -DBOOST_NO_CXX11_SCOPED_ENUMS"
-export CXXFLAGS="-I$local/include"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$local/lib/pkgconfig"
+export CPPFLAGS="$CPPFLAGS -DBOOST_SPIRIT_THREADSAFE -DBOOST_NO_CXX11_SCOPED_ENUMS"
+export CXXFLAGS="$CXXFLAGS -I$local/include"
 export INSTALL="/usr/bin/install -C"
 
 usage () {
@@ -14,9 +14,11 @@ usage () {
     printf '  -a  skip autogen\n'
     printf '  -c  skip configure\n'
     printf '  -m  update to master\n'
+    printf '  -t  skip test\n'
 }
 skip_autogen=NO
 skip_configure=NO
+skip_test=NO
 goto_master=NO
 while getopts 'hacm' option; do
     case "$option" in
@@ -36,6 +38,10 @@ while getopts 'hacm' option; do
             echo '+ Will update to master'
             goto_master=YES
             ;;
+        t)
+            echo '+ Will skip test'
+            skip_test=YES
+            ;;
         *)
             usage
             exit 1
@@ -47,7 +53,7 @@ cd "$work_dir"
 mkdir -p "$local"
 
 run () {
-    echo '>' $*
+    printf '> %s # PWD=%s\n' "$*" "$PWD"
     $* || exit 1
 }
 
@@ -64,7 +70,7 @@ clone_compile_install () {
     if [ ! -d "$project" ]; then
         run git clone --recursive "$git_base_url${project}.git"
     fi
-    run cd "$project"
+    cd "$project"
     if [ "$goto_master" = YES ]; then
         if is_dirty; then
             printf '+ %s is dirty, stopping.\n' "$project"
@@ -77,9 +83,12 @@ clone_compile_install () {
         run ./autogen.sh
     fi
     if [ "$skip_configure" != YES ]; then
-        run ./configure --prefix="$local"
+        run ./configure --prefix="$local" $CONFIGUREFLAGS
     fi
     run make -j`nproc`
+    if [ "$skip_test" != YES ]; then
+        run make -j`nproc` test
+    fi
     run make install
     cd ..
 }

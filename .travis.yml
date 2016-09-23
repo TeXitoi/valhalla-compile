@@ -24,4 +24,4 @@ install:
 script:
   - ./compile.sh -h
   - ./compile.sh
-  - ./compile.sh -acm
+  - ./compile.sh -acmt
