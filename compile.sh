@@ -20,7 +20,7 @@ skip_autogen=NO
 skip_configure=NO
 skip_test=NO
 goto_master=NO
-while getopts 'hacm' option; do
+while getopts 'hacmt' option; do
     case "$option" in
         h)
             usage
