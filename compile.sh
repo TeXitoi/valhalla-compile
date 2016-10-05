@@ -55,7 +55,8 @@ cd "$work_dir"
 mkdir -p "$local"
 
 run () {
-    printf '> %s # PWD=%s\n' "$*" "$PWD"
+    printf "compile: Entering directory '%s'\n" "$PWD"
+    printf '> %s\n' "$*"
     $* || exit 1
 }
 
