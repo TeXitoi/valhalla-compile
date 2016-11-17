@@ -12,17 +12,19 @@ export INSTALL="/usr/bin/install -C"
 usage () {
     printf 'Usage: %s [OPTION]...\n' "$0"
     printf 'Clone, compile and install Valhalla.\n\n'
-    printf '  -h  print this message and exit\n'
-    printf '  -a  skip autogen\n'
-    printf '  -c  skip configure\n'
-    printf '  -m  update to master\n'
-    printf '  -t  skip test\n'
+    printf '  -h          print this message and exit\n'
+    printf '  -a          skip autogen\n'
+    printf '  -c          skip configure\n'
+    printf '  -s <regex>  skip projects matching regex\n'
+    printf '  -m          update to master\n'
+    printf '  -t          skip test\n'
 }
 skip_autogen=NO
 skip_configure=NO
 skip_test=NO
+skip_project=''
 goto_master=NO
-while getopts 'hacmt' option; do
+while getopts 'hacms:t' option; do
     case "$option" in
         h)
             usage
@@ -39,6 +41,10 @@ while getopts 'hacmt' option; do
         m)
             echo '+ Will update to master'
             goto_master=YES
+            ;;
+        s)
+            skip_project="$OPTARG"
+            printf '+ Will skip projects matching %s\n' "$skip_project"
             ;;
         t)
             echo '+ Will skip test'
@@ -70,6 +76,10 @@ is_dirty () {
 clone_compile_install () {
     git_base_url="$1"
     project="$2"
+    if [ -n "$skip_project" ] && echo "$project" | grep -q "$skip_project"; then
+        printf '+ Skipping %s\n' "$project"
+        return 0
+    fi
     if [ ! -d "$project" ]; then
         run git clone --recursive "$git_base_url${project}.git"
     fi
