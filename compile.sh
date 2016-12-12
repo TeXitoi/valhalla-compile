@@ -4,7 +4,8 @@
 
 work_dir="$PWD"
 local="$work_dir/local"
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$local/lib/pkgconfig"
+zmq_git="https://github.com/zeromq/"
+export PKG_CONFIG_PATH="$local/lib/pkgconfig:$PKG_CONFIG_PATH"
 export CPPFLAGS="$CPPFLAGS -DBOOST_SPIRIT_THREADSAFE -DBOOST_NO_CXX11_SCOPED_ENUMS"
 export CXXFLAGS="$CXXFLAGS -I$local/include"
 export INSTALL="/usr/bin/install -C"
@@ -99,13 +100,15 @@ clone_compile_install () {
         run ./configure --prefix="$local" $CONFIGUREFLAGS
     fi
     run make -j`nproc`
-    if [ "$skip_test" != YES ]; then
+    if [ "$skip_test" != YES -a "$git_base_url" != "$zmq_git" ]; then
         run make -j`nproc` test
     fi
     run make install
     cd ..
 }
 
+clone_compile_install "$zmq_git" libzmq
+clone_compile_install "$zmq_git" czmq
 clone_compile_install https://github.com/kevinkreiser/ prime_server
 
 for project in midgard baldr sif skadi mjolnir meili loki odin thor tyr tools; do

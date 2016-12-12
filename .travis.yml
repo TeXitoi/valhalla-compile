@@ -14,7 +14,6 @@ addons:
       - libgeos-dev
       - libgeos++-dev
       - libcurl4-openssl-dev
-      - libzmq3-dev
 script:
   - ./compile.sh -h
   - ./compile.sh
